@@ -1,6 +1,6 @@
-# Fantasilandia Park - Gestionale
+# Gestionale in Php
 
-Questo progetto è un sistema gestionale per il parco divertimenti **Fantasilandia Park** (noto anche come *gestionale-php-guzzetta*). È composto da un backend robusto basato su Laravel e un'interfaccia frontend moderna sviluppata in Angular.
+Questo progetto è un sistema gestionale. È composto da un backend robusto basato su Laravel e un'interfaccia frontend moderna sviluppata in Angular.
 
 ## Architettura del Progetto
 
@@ -71,12 +71,9 @@ Per eseguire correttamente l'intero progetto, è necessario avere installato sul
 
 ## Principali Funzionalità e Modelli
 
-Il sistema gestionale espone diverse entità relative alla gestione del parco, tra cui:
-- **Dipendenti** e **Reparti**: Per la gestione delle risorse umane del parco.
+Il sistema gestionale espone diverse entità relative alla gestione, tra cui:
+- **Dipendenti** e **Reparti**: Per la gestione delle risorse umane.
 - **Permessi**: Livelli di accesso e ruoli nel sistema.
-- **Attrazioni**: Gestione delle varie giostre/attrazioni disponibili.
-- **Visite**: Tracciamento dell'affluenza.
-- **Recensioni**: Feedback dei visitatori.
 - **Admin**: Amministratori di sistema.
 
 ## API Documentation
@@ -85,5 +82,5 @@ Il backend espone le rotte in `backend/routes/api.php`. Ulteriori informazioni s
 
 ---
 
-Sviluppato per il progetto gestionale Fantasilandia Park.
+Sviluppato per il progetto gestionale in Php.
 
