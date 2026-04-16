@@ -1,59 +1,59 @@
-# FrontendAngular2
+# Frontend - Fantasilandia Park
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.7.
+Questo è il frontend dell'applicazione gestionale per **Fantasilandia Park**, sviluppato utilizzando [Angular](https://angular.dev/) (versione 21+). L'applicazione fornisce un'interfaccia utente interattiva per l'amministrazione e la gestione delle varie entità del parco, come dipendenti, reparti, attrazioni e recensioni.
 
-## Development server
+## Prerequisiti
 
-To start a local development server, run:
+Assicurati di avere installato:
+- **Node.js** (v18 o superiore)
+- **NPM** o **Yarn**
+- **Angular CLI**
 
+## Avvio rapido
+
+1. Installa le dipendenze:
+   ```bash
+   npm install
+   ```
+2. Avvia il server di sviluppo:
+   ```bash
+   ng serve
+   ```
+   L'applicazione sarà disponibile all'indirizzo `http://localhost:4200/`. L'app si ricaricherà automaticamente ad ogni modifica dei file sorgente.
+
+## Struttura del Progetto
+
+Il codice sorgente principale si trova nella cartella `src/`. Alcune delle directory principali includono:
+- `src/app/`: Contiene i componenti, i servizi, i modelli e la logica principale dell'applicazione.
+- `src/assets/`: Contiene le immagini, i fogli di stile globali e altri asset statici.
+- `src/environments/`: Configurazione per i diversi ambienti (sviluppo, produzione).
+
+## Generazione di componenti
+
+Puoi utilizzare Angular CLI per generare rapidamente nuovo codice. Ad esempio, per creare un nuovo componente:
 ```bash
-ng serve
+ng generate component nome-componente
 ```
+Puoi anche generare direttive, pipe, servizi e moduli. Usa `ng generate --help` per la lista completa.
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Build
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
+Per compilare il progetto per l'ambiente di produzione:
 
 ```bash
 ng build
 ```
+Questo ottimizzerà e minimizzerà i file, salvandoli nella cartella `dist/`.
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## Collegamento col Backend
 
-## Running unit tests
+Il frontend effettua chiamate API REST al backend Laravel. Assicurati che l'URL di base dell'API sia configurato correttamente nei file all'interno della cartella `src/environments/` o nei servizi dedicati in base alle impostazioni del backend (solitamente `http://localhost:8000/api`).
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+## Test
 
+Per eseguire i test unitari (configurati con Vitest):
 ```bash
 ng test
 ```
 
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Per eseguire i test end-to-end, usa `ng e2e` dopo aver configurato un framework appropriato (es. Cypress o Playwright).
