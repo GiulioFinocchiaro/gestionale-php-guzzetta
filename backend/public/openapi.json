@@ -1,0 +1,135 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Fantasilandia API",
+    "version": "1.0.0",
+    "description": "API per la gestione dell'azienda: admin, dipendenti, reparti, permessi."
+  },
+  "servers": [
+    { "url": "http://localhost:8000/api", "description": "Sviluppo locale" }
+  ],
+  "tags": [
+    { "name": "Admin", "description": "Gestione amministratori (tabella tbadmin)" },
+    { "name": "Dipendenti", "description": "Gestione dipendenti (tabella Dipendente)" },
+    { "name": "Reparti", "description": "Gestione reparti (tabella Reparto)" },
+    { "name": "Permessi", "description": "Gestione permessi (tabella Permesso)" },
+  ],
+  "paths": {
+    "/admin/login": {
+      "post": {
+        "tags": ["Admin"],
+        "summary": "Login admin",
+        "description": "Login semplice senza token. La password nel DB è salvata in MD5.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": { "type": "string", "example": "mario" },
+                  "password": { "type": "string", "example": "123456" }
+                },
+                "required": ["username", "password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Login ok" },
+          "422": { "description": "Errore di validazione o credenziali" }
+        }
+      }
+    },
+    "/dipendenti": {
+      "get": {
+        "tags": ["Dipendenti"],
+        "summary": "Lista dipendenti",
+        "responses": { "200": { "description": "OK" } }
+      },
+      "post": {
+        "tags": ["Dipendenti"],
+        "summary": "Crea dipendente",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "Fk_Reparto": { "type": "integer", "example": 1 },
+                  "nome": { "type": "string", "example": "Mario" },
+                  "cognome": { "type": "string", "example": "Rossi" },
+                  "dataNascita": { "type": "string", "format": "date", "example": "1995-05-03" },
+                  "codFiscale": { "type": "string", "example": "ASDSFG23456TFG43" },
+                  "dataAssunzione": { "type": "string", "format": "date", "example": "2017-10-06" },
+                  "sesso": { "type": "string", "example": "M" },
+                  "comuneNascita": { "type": "string", "example": "Roma" },
+                  "stipendioAnnuo": { "type": "integer", "example": 31000 },
+                  "foto": { "type": "string", "format": "binary", "description": "Foto da allegare, verra' salvata in automatico" }
+                },
+                "required": ["Fk_Reparto", "nome", "cognome", "codFiscale"]
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "Dipendente creato" } }
+      }
+    },
+    "/dipendenti/{id}": {
+      "parameters": [
+        { "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "example": 1 } }
+      ],
+      "get": {
+        "tags": ["Dipendenti"],
+        "summary": "Dettaglio dipendente",
+        "responses": { "200": { "description": "OK" }, "404": { "description": "Non trovato" } }
+      }
+    },
+    "/dipendenti/reparto/{repartoId}": {
+      "parameters": [
+        { "name": "repartoId", "in": "path", "required": true, "schema": { "type": "integer", "example": 1 } }
+      ],
+      "get": {
+        "tags": ["Dipendenti"],
+        "summary": "Lista dipendenti di un reparto",
+        "description": "Restituisce tutti i dipendenti che appartengono al reparto indicato.",
+        "responses": {
+          "200": { "description": "OK" }
+        }
+      }
+    },
+
+    "/reparti": {
+      "get": {
+        "tags": ["Reparti"],
+        "summary": "Lista reparti",
+        "responses": { "200": { "description": "OK" } }
+      }
+    },
+    "/reparti/{id}": {
+      "parameters": [
+        { "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "example": 1 } }
+      ],
+      "get": {
+        "tags": ["Reparti"],
+        "summary": "Dettaglio reparto",
+        "responses": { "200": { "description": "OK" }, "404": { "description": "Non trovato" } }
+      }
+    },
+
+    "/permessi/dipendente/{dipendenteId}": {
+      "parameters": [
+        { "name": "dipendenteId", "in": "path", "required": true, "schema": { "type": "integer", "example": 1 } }
+      ],
+      "get": {
+        "tags": ["Permessi"],
+        "summary": "Lista permessi di un dipendente",
+        "description": "Restituisce tutti i permessi associati al dipendente indicato.",
+        "responses": {
+          "200": { "description": "OK" }
+        }
+      }
+    }
+  }
+}
