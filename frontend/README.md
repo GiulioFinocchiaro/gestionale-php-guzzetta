@@ -1,6 +1,6 @@
-# Frontend - Fantasilandia Park
+# Frontend
 
-Questo è il frontend dell'applicazione gestionale per **Fantasilandia Park**, sviluppato utilizzando [Angular](https://angular.dev/) (versione 21+). L'applicazione fornisce un'interfaccia utente interattiva per l'amministrazione e la gestione delle varie entità del parco, come dipendenti, reparti, attrazioni e recensioni.
+Questo è il frontend dell'applicazione gestionale sviluppato utilizzando [Angular](https://angular.dev/) (versione 21+). L'applicazione fornisce un'interfaccia utente interattiva per l'amministrazione e la gestione delle varie entità, come dipendenti e reparti.
 
 ## Prerequisiti
 
@@ -27,14 +27,6 @@ Il codice sorgente principale si trova nella cartella `src/`. Alcune delle direc
 - `src/app/`: Contiene i componenti, i servizi, i modelli e la logica principale dell'applicazione.
 - `src/assets/`: Contiene le immagini, i fogli di stile globali e altri asset statici.
 - `src/environments/`: Configurazione per i diversi ambienti (sviluppo, produzione).
-
-## Generazione di componenti
-
-Puoi utilizzare Angular CLI per generare rapidamente nuovo codice. Ad esempio, per creare un nuovo componente:
-```bash
-ng generate component nome-componente
-```
-Puoi anche generare direttive, pipe, servizi e moduli. Usa `ng generate --help` per la lista completa.
 
 ## Build
 
