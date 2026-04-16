@@ -30,18 +30,14 @@ Per eseguire correttamente l'intero progetto, è necessario avere installato sul
    ```bash
    composer install
    ```
-3. Crea e configura il file `.env` copiando il template di esempio:
-   ```bash
-   cp .env.example .env
-   ```
-   *(Assicurati di configurare i parametri del database in questo file. Il progetto supporta SQLite o MySQL a seconda delle tue preferenze).*
 4. Genera la chiave dell'applicazione:
    ```bash
    php artisan key:generate
    ```
-5. Esegui le migrazioni per creare la struttura del database e i seeder per popolarlo:
+5. Crea il file link per lo storage (solo la prima volta):
+   Questo serve per rendere pubbliche le immagini dei dipendenti salvate sul backend.
    ```bash
-   php artisan migrate --seed
+   php artisan storage:link
    ```
 6. Avvia il server di sviluppo backend:
    ```bash
