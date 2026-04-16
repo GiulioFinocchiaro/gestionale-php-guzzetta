@@ -1,0 +1,212 @@
+<app-navbar></app-navbar>
+
+<div class="p-8 bg-gray-50 min-h-screen">
+  <div class="max-w-7xl mx-auto flex flex-col items-center">
+    <h1 class="text-3xl font-bold text-gray-900 mb-8 text-center">
+      Gestione Reparti
+    </h1>
+
+    <div class="mb-10 flex flex-col items-center gap-4 w-full">
+      <div class="flex flex-col items-center gap-2">
+        <label class="text-xs font-bold text-gray-400 uppercase tracking-wider">
+          Seleziona Reparto
+        </label>
+
+        @if (repartiLoading$ | async) {
+          <div class="w-64 h-12 bg-gray-200 rounded-full animate-pulse border border-gray-200"></div>
+        } @else {
+          <div class="relative w-64 text-sm">
+            <button type="button"
+                    (click)="toggleDropdown()"
+                    (blur)="closeDropdown()"
+                    class="w-full flex items-center justify-between px-5 py-3 border rounded-full bg-white text-gray-700 border-gray-200 shadow-sm hover:border-indigo-300 focus:ring-4 focus:ring-indigo-50 focus:outline-none transition-all">
+              <span class="truncate font-medium">
+                {{ (selectedRepartoLabel$ | async) || 'Tutti i reparti' }}
+              </span>
+              <svg class="w-5 h-5 text-gray-400 transition-transform duration-300"
+                   [class.rotate-180]="isDropdownOpen"
+                   fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 9-7 7-7-7"/>
+              </svg>
+            </button>
+
+            @if (isDropdownOpen) {
+              <ul class="absolute left-0 z-50 w-full bg-white border border-gray-100 rounded-2xl shadow-xl mt-2 py-2 overflow-hidden animate-in fade-in zoom-in duration-200">
+                <li class="px-5 py-3 hover:bg-indigo-50 text-gray-600 hover:text-indigo-700 cursor-pointer transition-colors border-b border-gray-50 text-left"
+                    (mousedown)="selectReparto(null)">
+                  Tutti i reparti
+                </li>
+                @for (r of (reparti$ | async); track r.id) {
+                  <li class="px-5 py-3 hover:bg-indigo-50 text-gray-700 hover:text-indigo-700 cursor-pointer transition-colors text-left"
+                      (mousedown)="selectReparto(r)">
+                    {{ r.nomeReparto || ('Reparto ' + r.id) }}
+                  </li>
+                }
+              </ul>
+            }
+          </div>
+        }
+      </div>
+    </div>
+
+    <hr class="border-gray-200 mb-10 w-full">
+
+    <div class="w-full">
+      <div class="flex items-center justify-between mb-8 w-full">
+        <h2 class="text-2xl font-semibold text-gray-800 text-center flex-1">
+          Elenco Dipendenti
+        </h2>
+        <button (click)="openModal()" class="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-full hover:bg-indigo-700 transition shadow-sm font-medium text-sm">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+          Nuovo Dipendente
+        </button>
+      </div>
+
+      @if (dipendenti$ | async; as dipList) {
+
+        @if (dipendentiLoading$ | async) {
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 justify-items-center w-full">
+            @for (i of [1,2,3,4,5,6,7,8]; track $index) {
+              <div class="w-72 bg-white rounded-3xl overflow-hidden border border-gray-100 shadow-sm h-[420px] flex flex-col">
+                <div class="h-56 bg-gray-200 animate-pulse w-full"></div>
+                <div class="flex flex-col items-center px-6 mt-6 w-full">
+                  <div class="h-6 bg-gray-200 rounded-full w-3/4 animate-pulse"></div>
+                  <div class="h-4 bg-gray-200 rounded-full w-1/2 mt-3 animate-pulse"></div>
+                  <div class="h-10 bg-gray-200 rounded-lg w-2/3 mt-6 animate-pulse"></div>
+                  <div class="h-12 bg-gray-200 rounded-2xl w-full mt-6 animate-pulse"></div>
+                </div>
+              </div>
+            }
+          </div>
+        }
+        @else if (dipList.length === 0) {
+          <div class="flex flex-col items-center justify-center py-20 bg-white rounded-3xl border-2 border-dashed border-gray-200 text-center px-4 w-full">
+            <p class="text-gray-400 text-lg">Nessun dipendente disponibile in questa categoria.</p>
+          </div>
+        }
+        @else {
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 justify-items-center">
+            @for (d of dipList; track d.codFiscale || d.id_Dipendente) {
+              <div class="group w-72 bg-white rounded-3xl pb-8 overflow-hidden border border-gray-200 shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-500">
+                <div class="relative h-56 overflow-hidden">
+                  <img class="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-110"
+                       [src]="d.pathFoto_url || 'https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=400'"
+                       [alt]="d.nome">
+                  <div class="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent opacity-60"></div>
+                </div>
+
+                <div class="flex flex-col items-center px-6 text-center">
+                  <h3 class="font-bold text-gray-900 text-xl truncate w-full">{{ d.nome }} {{ d.cognome }}</h3>
+                  <p class="text-indigo-600 text-sm font-medium mt-1 truncate w-full">
+                    {{ d.stipendioAnnuo | currency:'EUR':'symbol':'1.0-0' }} / anno
+                  </p>
+
+                  <div class="mt-4 px-3 py-1 bg-gray-50 rounded-lg border border-gray-100">
+                    <p class="text-[10px] text-gray-400 uppercase tracking-widest font-bold">Codice Fiscale</p>
+                    <p class="text-gray-700 font-mono text-xs">{{ d.codFiscale }}</p>
+                  </div>
+
+                  <button [routerLink]="['/dipendente']" [queryParams]="{id: d.id_Dipendente}" class="w-full mt-6 bg-gray-900 text-white text-sm font-bold py-3 rounded-2xl hover:bg-indigo-600 shadow-lg shadow-gray-200 hover:shadow-indigo-200 transition-all duration-300 flex items-center justify-center gap-2 group/btn">
+                    <span>Mostra Dettagli</span>
+                    <svg class="w-4 h-4 transform group-hover/btn:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            }
+          </div>
+        }
+      }
+    </div>
+  </div>
+</div>
+
+@if (isModalOpen) {
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
+  <div class="bg-white rounded-3xl shadow-xl w-full max-w-2xl overflow-hidden flex flex-col max-h-[90vh]">
+    <div class="p-6 border-b border-gray-100 flex items-center justify-between">
+      <h3 class="text-xl font-bold text-gray-900">Nuovo Dipendente</h3>
+      <button (click)="closeModal()" class="text-gray-400 hover:text-gray-600 transition">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+
+    <div class="p-6 overflow-y-auto flex-1 text-sm text-gray-700">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div class="flex flex-col gap-1">
+          <label class="font-medium text-gray-900">Nome <span class="text-red-500">*</span></label>
+          <input type="text" [(ngModel)]="newDipendente.nome" class="border border-gray-300 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-100 focus:border-indigo-400 transition" placeholder="Nome">
+        </div>
+
+        <div class="flex flex-col gap-1">
+          <label class="font-medium text-gray-900">Cognome <span class="text-red-500">*</span></label>
+          <input type="text" [(ngModel)]="newDipendente.cognome" class="border border-gray-300 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-100 focus:border-indigo-400 transition" placeholder="Cognome">
+        </div>
+
+        <div class="flex flex-col gap-1">
+          <label class="font-medium text-gray-900">Codice Fiscale <span class="text-red-500">*</span></label>
+          <input type="text" [(ngModel)]="newDipendente.codFiscale" class="border border-gray-300 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-100 focus:border-indigo-400 transition" placeholder="Codice Fiscale" maxlength="16">
+        </div>
+
+        <div class="flex flex-col gap-1">
+          <label class="font-medium text-gray-900">Sesso <span class="text-red-500">*</span></label>
+          <select [(ngModel)]="newDipendente.sesso" class="border border-gray-300 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-100 focus:border-indigo-400 transition bg-white">
+            <option value="M">Maschio (M)</option>
+            <option value="F">Femmina (F)</option>
+          </select>
+        </div>
+
+        <div class="flex flex-col gap-1">
+          <label class="font-medium text-gray-900">Reparto <span class="text-red-500">*</span></label>
+          <select [(ngModel)]="newDipendente.Fk_Reparto" class="border border-gray-300 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-100 focus:border-indigo-400 transition bg-white">
+            <option [ngValue]="undefined" disabled>Seleziona un reparto</option>
+            @for (r of (reparti$ | async); track r.id) {
+              <option [ngValue]="r.id">{{ r.nomeReparto || ('Reparto ' + r.id) }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="flex flex-col gap-1">
+          <label class="font-medium text-gray-900">Comune Nascita</label>
+          <input type="text" [(ngModel)]="newDipendente.comuneNascita" class="border border-gray-300 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-100 focus:border-indigo-400 transition" placeholder="Es. Roma">
+        </div>
+
+        <div class="flex flex-col gap-1">
+          <label class="font-medium text-gray-900">Data Nascita</label>
+          <input type="date" [(ngModel)]="newDipendente.dataNascita" class="border border-gray-300 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-100 focus:border-indigo-400 transition bg-white text-gray-700">
+        </div>
+
+        <div class="flex flex-col gap-1">
+          <label class="font-medium text-gray-900">Data Assunzione</label>
+          <input type="date" [(ngModel)]="newDipendente.dataAssunzione" class="border border-gray-300 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-100 focus:border-indigo-400 transition bg-white text-gray-700">
+        </div>
+
+        <div class="flex flex-col gap-1 md:col-span-2">
+          <label class="font-medium text-gray-900">Stipendio Annuo (€)</label>
+          <input type="number" [(ngModel)]="newDipendente.stipendioAnnuo" class="border border-gray-300 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-100 focus:border-indigo-400 transition" placeholder="Es. 25000">
+        </div>
+
+        <div class="flex flex-col gap-1 md:col-span-2">
+          <label class="font-medium text-gray-900">Foto</label>
+          <input type="file" (change)="onFileSelected($event)" accept="image/*" class="border border-gray-300 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-100 focus:border-indigo-400 transition bg-white text-gray-700 file:border-0 file:bg-indigo-50 file:text-indigo-700 file:px-4 file:py-1.5 file:rounded-full file:mr-3 hover:file:bg-indigo-100 file:transition">
+        </div>
+      </div>
+    </div>
+
+    <div class="p-6 border-t border-gray-100 flex items-center justify-end gap-3 bg-gray-50">
+      <button type="button" (click)="closeModal()" [disabled]="isSaving" class="px-5 py-2.5 text-sm font-medium text-gray-600 bg-white border border-gray-300 rounded-full hover:bg-gray-50 transition min-w-[100px]">
+        Annulla
+      </button>
+      <button type="button" (click)="saveDipendente()" [disabled]="isSaving" class="flex items-center justify-center min-w-[120px] px-5 py-2.5 text-sm font-medium text-white bg-indigo-600 rounded-full hover:bg-indigo-700 transition disabled:opacity-70">
+        @if (isSaving) {
+          <svg class="animate-spin w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg>
+          Salvataggio...
+        } @else {
+          Salva Dipendente
+        }
+      </button>
+    </div>
+  </div>
+</div>
+}

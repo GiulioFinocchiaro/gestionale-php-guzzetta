@@ -1,0 +1,103 @@
+<app-navbar></app-navbar>
+
+<div class="p-8 bg-gray-50 min-h-screen">
+  <div class="max-w-7xl mx-auto flex flex-col items-center relative">
+    <div class="w-full flex items-center justify-between mb-8">
+      <a routerLink="/reparti" class="flex items-center text-sm font-medium text-gray-500 hover:text-indigo-600 transition-colors bg-white px-4 py-2 border border-gray-200 rounded-full shadow-sm">
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+        </svg>
+        Torna ai Reparti
+      </a>
+      <h1 class="text-3xl font-bold text-gray-900 text-center flex-1 pr-[140px]">
+        Dettaglio Dipendente
+      </h1>
+    </div>
+
+    @if (error$ | async; as err) {
+      <div class="text-red-600 text-sm">{{ err }}</div>
+    }
+
+    <div class="w-full flex flex-col gap-10">
+      <section class="bg-white border border-gray-200 rounded-3xl p-8 shadow-sm w-full">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-6 text-center">Dati Dipendente</h2>
+
+        @if (loadingDipendente$ | async) {
+          <div class="h-24 animate-pulse bg-gray-100 rounded"></div>
+        }
+
+        @if (!(loadingDipendente$ | async) && (dipendente$ | async); as d) {
+          @if (d.pathFoto) {
+            <div class="mb-4 flex justify-center">
+              <img
+                [src]="d.pathFoto_url"
+                [alt]="d.nome + ' ' + d.cognome"
+                class="w-40 h-40 rounded-3xl object-cover border border-gray-200 shadow-sm"
+              />
+            </div>
+          }
+
+          <div class="flex flex-col items-center">
+            <div class="w-full overflow-hidden rounded-2xl border border-stone-200">
+              <table class="w-full">
+                <thead class="border-b border-stone-200 bg-stone-100 text-sm font-medium text-stone-600">
+                <tr>
+                  <th class="px-2.5 py-2 text-start font-medium">Campo</th>
+                  <th class="px-2.5 py-2 text-start font-medium">Valore</th>
+                </tr>
+                </thead>
+                <tbody class="group text-sm text-stone-800">
+                <tr class="border-b border-stone-200 last:border-0"><td class="p-3">Nome</td><td class="p-3">{{ d.nome }}</td></tr>
+                <tr class="border-b border-stone-200 last:border-0"><td class="p-3">Cognome</td><td class="p-3">{{ d.cognome }}</td></tr>
+                <tr class="border-b border-stone-200 last:border-0"><td class="p-3">Data nascita</td><td class="p-3">{{ d.dataNascita || '-' }}</td></tr>
+                <tr class="border-b border-stone-200 last:border-0"><td class="p-3">Codice fiscale</td><td class="p-3">{{ d.codFiscale }}</td></tr>
+                <tr class="border-b border-stone-200 last:border-0"><td class="p-3">Data assunzione</td><td class="p-3">{{ d.dataAssunzione || '-' }}</td></tr>
+                <tr class="border-b border-stone-200 last:border-0"><td class="p-3">Sesso</td><td class="p-3">{{ d.sesso || '-' }}</td></tr>
+                <tr class="border-b border-stone-200 last:border-0"><td class="p-3">Comune nascita</td><td class="p-3">{{ d.comuneNascita || '-' }}</td></tr>
+                <tr class="border-b border-stone-200 last:border-0"><td class="p-3">Stipendio annuo</td><td class="p-3">{{ d.stipendioAnnuo ?? '-' }}</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        }
+      </section>
+
+      <section class="bg-white border border-gray-200 rounded-3xl p-8 shadow-sm w-full">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-6 text-center">Permessi</h2>
+
+        @if (loadingPermessi$ | async) {
+          <div class="h-20 animate-pulse bg-gray-100 rounded"></div>
+        }
+
+        @if (!(loadingPermessi$ | async)) {
+          @if (permessi$ | async; as permessi) {
+            @if (permessi.length === 0) {
+              <div class="text-gray-500 text-sm">Nessun permesso disponibile.</div>
+            } @else {
+              <div class="flex flex-col items-center">
+                <div class="w-full overflow-hidden rounded-2xl border border-stone-200">
+                  <table class="w-full">
+                    <thead class="border-b border-stone-200 bg-stone-100 text-sm font-medium text-stone-600">
+                    <tr>
+                      <th class="px-2.5 py-2 text-start font-medium">Data Permesso</th>
+                      <th class="px-2.5 py-2 text-start font-medium">Motivazione</th>
+                    </tr>
+                    </thead>
+                    <tbody class="group text-sm text-stone-800">
+                      @for (p of permessi; track p.ID_Permesso || p.dataPermesso) {
+                        <tr class="border-b border-stone-200 last:border-0">
+                          <td class="p-3">{{ p.dataPermesso }}</td>
+                          <td class="p-3">{{ p.motivazione }}</td>
+                        </tr>
+                      }
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            }
+          }
+        }
+      </section>
+    </div>
+  </div>
+</div>
